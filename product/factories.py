@@ -12,9 +12,9 @@ class CategoryFactory(factory.django.DjangoModelFactory):
 
 class ProductFactory(factory.django.DjangoModelFactory):
     title = factory.Faker('pystr')
-    description = factory.Faker('text', max_nb_chars=500)
+    # description = factory.Faker('text', max_nb_chars=500)
     price = factory.Faker('pyint', min_value=0)
-    active = factory.Iterator([True, False])
+    # active = factory.Iterator([True, False])
     category = factory.RelatedFactory(CategoryFactory, factory_related_name='product_set')
 
     @factory.post_generation
