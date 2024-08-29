@@ -1,10 +1,18 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 from product.models.category import Category
 
 class TestCategoryViewSet(APITestCase):
     def setUp(self):
+        # Criação do usuário e token de autenticação
+        self.user = User.objects.create_user(username="danilloneo", password="Kamigawa3001%")
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+
+        # Criação de uma categoria para o teste
         self.category = Category.objects.create(
             title="Tech", 
             slug="tech", 
@@ -25,6 +33,7 @@ class TestCategoryViewSet(APITestCase):
             data, 
             format="json"
         )
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["title"], "Science")
 
@@ -34,5 +43,5 @@ class TestCategoryViewSet(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["title"], self.category.title)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0]["title"], self.category.title)

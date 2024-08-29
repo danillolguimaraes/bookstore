@@ -37,11 +37,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
-    "rest_framework.authtoken",
     "django_extensions",
+    "debug_toolbar",
     "order",
     "product",
+    "rest_framework",
+    "rest_framework.authtoken"
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "bookstore.urls"
@@ -126,3 +128,19 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5,
+    "DEFAULT_AUTENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication", #suporta diversas outras autenticações, tenho uma autenticação base para outras autenticações, aguarda um tipo de autentticação
+        "rest_framework.authentication.SessionAuthentication", #vai guardar nossa autenticação dentro de uma sessão, temos diversas instâncias, maq, servidores, autenticação, a sessão não pode sair do ar, ela precisa ser distribuida, seria a redistribuição da sessão do usuario através de outras maquinas
+        "rest_framework.authentication.TokenAuthentication",
+        ],
+
+  } #determina a quantidade de registros que vai ficar por paginação
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
