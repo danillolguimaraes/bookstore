@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = "django-insecure-ozxl%e3oqggs7@s#lgo$j($%e4w7df%o-(jby&^gja)t^ppun!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ["testserver", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     "order",
     "product",
     "rest_framework",
-    "rest_framework.authtoken"
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -80,13 +81,22 @@ WSGI_APPLICATION = "bookstore.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -133,14 +143,20 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
     "DEFAULT_AUTENTICATION_CLASSES": [
-        "rest_framework.authentication.BasicAuthentication", #suporta diversas outras autenticações, tenho uma autenticação base para outras autenticações, aguarda um tipo de autentticação
-        "rest_framework.authentication.SessionAuthentication", #vai guardar nossa autenticação dentro de uma sessão, temos diversas instâncias, maq, servidores, autenticação, a sessão não pode sair do ar, ela precisa ser distribuida, seria a redistribuição da sessão do usuario através de outras maquinas
+        "rest_framework.authentication.BasicAuthentication",  # suporta diversas outras autenticações, tenho uma autenticação base para outras autenticações, aguarda um tipo de autentticação
+        "rest_framework.authentication.SessionAuthentication",  # vai guardar nossa autenticação dentro de uma sessão, temos diversas instâncias, maq, servidores, autenticação, a sessão não pode sair do ar, ela precisa ser distribuida, seria a redistribuição da sessão do usuario através de outras maquinas
         "rest_framework.authentication.TokenAuthentication",
-        ],
-
-  } #determina a quantidade de registros que vai ficar por paginação
+    ],
+}  # determina a quantidade de registros que vai ficar por paginação
 
 INTERNAL_IPS = [
-    '127.0.0.1',
+    "127.0.0.1",
 ]
 
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
+DEBUG = int(os.environ.get("DEBUG", default=0))
+
+# 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
+# For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")

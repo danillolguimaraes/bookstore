@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+
 # from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 # from rest_framework.permissions import IsAuthenticated
 from product.models import Product
@@ -12,7 +13,7 @@ class ProductViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Product.objects.all().order_by("id")
-    
 
-#com o basic authentication ele gera um hash no usuario e senha , não é muito utilizado.
+
+# com o basic authentication ele gera um hash no usuario e senha , não é muito utilizado.
 # vamos adicionar o token
