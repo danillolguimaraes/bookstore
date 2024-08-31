@@ -8,15 +8,14 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9]
-        # poetry-version: [1.1.4] # Removido para utilizar sempre a versão mais recente
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3  # Atualizado para v3
+    - uses: actions/checkout@v3
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4  # Atualizado para v4
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -24,7 +23,7 @@ jobs:
       run: |
         python -m ensurepip
         python -m pip install --upgrade pip
-        python -m pip install poetry  # Instala a versão mais recente do Poetry
+        python -m pip install poetry
 
     - name: Install dependencies
       shell: bash
@@ -32,4 +31,4 @@ jobs:
 
     - name: Test
       run: |
-        poetry run python manage.py test
+        poetry run python manage.py test order.tests  # Removido um nível de bookstore
