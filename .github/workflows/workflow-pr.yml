@@ -1,16 +1,18 @@
-name: Python Pull Request Workflow
-on: [pull_request]
-jobs:
+name: Python Push Workflow
+on: [push]  # Altera para executar no push ao invés de pull_request
 
+jobs:
   qa:
     name: Quality check
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest  # Atualizado para a versão mais recente
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3  # Atualizado para v3
+
       - name: Set up Python
-        uses: actions/setup-python@master
+        uses: actions/setup-python@v4  # Atualizado para v4
         with:
           python-version: 3.8
+
       - name: Install poetry
         run: |
           pip install -U pip
@@ -19,19 +21,17 @@ jobs:
         env:
           POETRY_VIRTUALENVS_CREATE: false
 
-      - name: View poetry --help
-        run: poetry --help
-
       - name: Install dependencies
         shell: bash
         run: python -m poetry install
 
       - name: Test
         run: |
-          poetry run python manage.py test
-      - name: Wemake Python Stylguide
+          # Especifica o caminho correto para evitar duplicações
+          poetry run python manage.py test order.tests  # Removido caminho duplicado
+
+      - name: Wemake Python Styleguide
         uses: wemake-services/wemake-python-styleguide@0.16.0
-        continue-on-error: true
         with:
           reporter: 'github-pr-review'
         env:
