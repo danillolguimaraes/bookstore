@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8, 3.9]
-        poetry-version: [1.1.4]
+        # poetry-version: [1.1.4] # Removido para utilizar sempre a versão mais recente
 
     runs-on: ubuntu-latest
 
@@ -20,18 +20,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install poetry ${{ matrix.poetry-version }}
+    - name: Install the latest Poetry version
       run: |
         python -m ensurepip
         python -m pip install --upgrade pip
-        python -m pip install poetry==${{ matrix.poetry-version }}
-
-    # Remover o comando que verifica `poetry --help` para evitar erros de execução desnecessários
-    # Se necessário, podes adicionar de novo após a confirmação da instalação do Poetry.
+        python -m pip install poetry  # Instala a versão mais recente do Poetry
 
     - name: Install dependencies
       shell: bash
-      run: python -m poetry install
+      run: poetry install
 
     - name: Test
       run: |
